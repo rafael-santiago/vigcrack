@@ -1,0 +1,14 @@
+include ~/toolsets/gcc/gcc-app.hsl
+
+var sources type list;
+var includes type list;
+var cflags type list;
+var libraries type list;
+var ldflags type list;
+
+project vigcrack : toolset "gcc-c-app" : $sources, $includes, $cflags, $libraries, $ldflags, "vigcrack";
+
+vigcrack.prologue() {
+    $sources.ls(".*\\.c$");
+}
+
