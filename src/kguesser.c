@@ -1,3 +1,10 @@
+/*
+ *                           Copyright (C) 2005-2016 by Rafael Santiago
+ *
+ * This is a free software. You can redistribute it and/or modify under
+ * the terms of the GNU General Public License version 2.
+ *
+ */
 #include "kguesser.h"
 #include <string.h>
 #include <stdio.h>
@@ -114,11 +121,11 @@ static char *pick_pattern(const char *pattern, const char *pattern_end) {
     return &split[0];
 }
 
-struct kprobs *kguesser(const unsigned char *ciphertext, const size_t ciphertext_size,
+struct kprobs *kguesser(const char *ciphertext, const size_t ciphertext_size,
                         const size_t min_pattern_size, const size_t max_pattern_size,
                         const size_t min_key_length, const size_t max_key_length) {
-    const unsigned char *cp = NULL, *cp_end = NULL, *pt = NULL, *pt_end = NULL;
-    const unsigned char *cpp = NULL;
+    const char *cp = NULL, *cp_end = NULL, *pt = NULL, *pt_end = NULL;
+    const char *cpp = NULL;
     struct kprobs *probs = NULL;
     size_t p = 0;
     struct found_pattern *fp = NULL;

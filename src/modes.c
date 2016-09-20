@@ -1,3 +1,10 @@
+/*
+ *                           Copyright (C) 2005-2016 by Rafael Santiago
+ *
+ * This is a free software. You can redistribute it and/or modify under
+ * the terms of the GNU General Public License version 2.
+ *
+ */
 #include "ldbuf.h"
 #include "option.h"
 #include "kguesser.h"
@@ -41,7 +48,7 @@ static void keyword_guesser_details() {
 
 int keyword_guesser() {
     char *filepath = NULL;
-    unsigned char *ciphertext = NULL;
+    char *ciphertext = NULL;
     size_t ciphertext_size = 0;
     struct kprobs *kprobs = NULL;
     struct found_pattern *fp = NULL;
@@ -184,7 +191,7 @@ int assumption() {
     char *filepath = NULL;
     size_t key_len = 0, key_usage_count = 0, key_usage_point = 0, k = 0;
     int max_attempts = 0, m = 0;
-    unsigned char *ciphertext = NULL, *cp = NULL, *cp_end = NULL;
+    char *ciphertext = NULL, *cp = NULL, *cp_end = NULL;
     size_t ciphertext_size = 0;
     char *key = NULL;
 

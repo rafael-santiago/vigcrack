@@ -1,4 +1,12 @@
-include ~/toolsets/gcc/gcc-app.hsl
+#
+#                                Copyright (C) 2016 by Rafael Santiago
+#
+# This is a free software. You can redistribute it and/or modify under
+# the terms of the GNU General Public License version 2.
+#
+#
+include Toolsets.hsl
+include ~/toolsets/common/utils/lang/c/dependency_scanner.hsl
 
 var sources type list;
 var includes type list;
@@ -6,7 +14,14 @@ var cflags type list;
 var libraries type list;
 var ldflags type list;
 
-project vigcrack : toolset "gcc-c-app" : $sources, $includes, $cflags, $libraries, $ldflags, "vigcrack";
+var toolset_name type string;
+
+vigcrack.preloading() {
+    $toolset_name = get_toolset_basename() + "app";
+}
+
+project vigcrack : toolset $toolset_name : dependencies get_c_cpp_deps() :
+    $sources, $includes, $cflags, $libraries, $ldflags, "vigcrack";
 
 vigcrack.prologue() {
     $sources.ls(".*\\.c$");
