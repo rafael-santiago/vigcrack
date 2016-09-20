@@ -39,13 +39,13 @@ static char *process_buffer(const char *key, size_t key_size, vigF F, const char
     const char *bp = NULL, *bp_end = NULL;
     size_t k = 0;
 
-    resbuf = (char *)malloc(buffer_size);
+    resbuf = (char *)malloc(buffer_size + 1);
 
     if (resbuf == NULL) {
         return NULL;
     }
 
-    memset(resbuf, 0, buffer_size);
+    memset(resbuf, 0, buffer_size + 1);
 
     rp = resbuf;
     bp = buffer;
