@@ -173,7 +173,9 @@ int help() {
     for (s = 0; s < see_also_nr; s++) {
         printf("[--%s]%s", see_also[s].mode, ((s+1) != see_also_nr) ? " | " : "\n\n");
     }
-    printf("*** Try to use: vigcrack help=<mode>, in order to know more about a given mode.\n");
+    printf("*** Try to use: vigcrack help=<mode>, in order to know more about a given mode.\n\n"
+            "vigcrack is Copyright (C) 2003-2016 by Rafael Santiago.\n"
+            "Bug reports, feedback, etc: <voidbrainvoid@gmail.com> or <https://github.com/rafael-santiago/vigcrack/issues>\n\n");
 
     return 0;
 }
