@@ -2,6 +2,7 @@
 #include "ldbuf.h"
 #include "kguesser.h"
 #include "cipher.h"
+#include "kcheck.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -141,15 +142,16 @@ static int is_xstr(const char *data) {
 }
 
 int assumption() {
-/*    char *pattern = NULL;
+    char *pattern = NULL;
+    size_t pattern_size = 0;
     char *plaintext = NULL;
+    size_t plaintext_size = 0;
     char *filepath = NULL;
-    char *key_size = NULL;
-    char *max_attempts = NULL;
-    unsigned char *ciphertext = NULL;
+    size_t key_size = 0, key_usage_count = 0, key_usage_point = 0, k = 0;
+    int max_attempts = 0, m = 0;
+    unsigned char *ciphertext = NULL, *cp = NULL, *cp_end = NULL;
     size_t ciphertext_size = 0;
-    size_t buf_size = 0;
-    char *buf = NULL;
+    char *key = NULL;
 
     pattern = get_option("pattern", NULL);
 
@@ -158,10 +160,7 @@ int assumption() {
         return 1;
     }
 
-    if (!is_xstr(pattern)) {
-        printf("ERROR: --pattern has invalid data.\n");
-        return 1;
-    }
+    pattern_size = strlen(pattern);
 
     plaintext = get_option("plaintext", NULL);
 
@@ -170,26 +169,23 @@ int assumption() {
         return 1;
     }
 
-    if (strlen(plaintext) != strlen(pattern) / 2) {
+    plaintext_size = strlen(plaintext);
+
+    if (plaintext_size != pattern_size) {
         printf("ERROR: --plaintext has data of wrong size.\n");
         return 1;
     }
 
-    key_size = get_option("key-size", NULL);
+    key_size = atoi(get_option("key-size", "0"));
 
-    if (key_size == NULL) {
+    if (key_size == 0) {
         printf("ERROR: --key-size is missing.\n");
         return 1;
     }
 
-    if (!is_number(key_size)) {
-        printf("ERROR: --key-size is invalid.\n");
-        return 1;
-    }
+    max_attempts = atoi(get_option("max-attempts", "0"));
 
-    max_attempts = get_option("max-attempts", "0");
-
-    if (!is_number(max_attempts)) {
+    if (max_attempts < 0) {
         printf("ERROR: --max-attempts has invalid data.\n");
         return 1;
     }
@@ -200,30 +196,138 @@ int assumption() {
         return 1;
     }
 
-    buf = ldbuf(filepath, &buf_size);
+    ciphertext = ldbuf(filepath, &ciphertext_size);
 
-    if (buf == NULL) {
+    if (ciphertext == NULL) {
         printf("ERROR: when reading \"%s\".\n", filepath);
         return 1;
     }
 
-    ciphertext = hex2byte(buf, buf_size, &ciphertext_size);
+    key = get_key_by_assumed_plaintext(pattern, pattern_size, plaintext, plaintext_size, key_size);
 
-    if (ciphertext == NULL) {
-        printf("ERROR: when processing the ciphertext.\n");
-        free(buf);
-        return 1;
-    }
+    key = align_assumed_key(key,
+                            key_size,
+                            &key_usage_count,
+                            &key_usage_point,
+                            pattern,
+                            pattern_size,
+                            ciphertext,
+                            ciphertext_size);
 
-    free(buf);
+    printf("\n*** The letter at position #%d was used to encipher it. "
+           "It was used '%d' times. The effective key is '%s'.\n", key_usage_point, key_usage_count, key);
 
     printf("\n*** Decryption attempts assuming that '%s' leads to '%s'...\n\n", pattern, plaintext);
 
-    xor_ciphertext(ciphertext, ciphertext_size, pattern, plaintext, atoi(key_size), atoi(max_attempts));
+    cp = ciphertext;
+    cp_end = cp + ciphertext_size;
+
+    printf("\t%1s\t%1s\t%1s\n\t__________________\n", "K", "C", "P");
+
+    if (max_attempts == 0) {
+        max_attempts = ciphertext_size;
+    }
+
+    while (cp != cp_end && m < max_attempts) {
+        printf("\t%c\t%c\t%c\n", key[k], *cp, decrypt(key[k], *cp));
+        k = (k + 1) % key_size;
+        cp++;
+        m++;
+    }
+
+    printf("\t__________________\n");
+
+    free(key);
+    free(ciphertext);
+
+    return 0;
+}
+
+int decryptor() {
+    char *filepath = NULL;
+    char *ciphertext = NULL;
+    char *key = NULL;
+    size_t ciphertext_size = 0;
+    size_t key_size = 0;
+    char *plaintext = NULL;
+
+    filepath = get_option("file-path", NULL);
+    if (filepath == NULL) {
+        printf("ERROR: --file-path=<path> is missing.\n");
+        return 1;
+    }
+
+    key = get_option("key", NULL);
+    if (key == NULL) {
+        printf("ERROR: --key=<data> is missing.\n");
+        return 1;
+    }
+    key_size = strlen(key);
+
+    ciphertext = ldbuf(filepath, &ciphertext_size);
+
+    if (ciphertext == NULL) {
+        printf("WARNING: NULL ciphertext.\n");
+        return 1;
+    }
+
+    plaintext = decrypt_buffer(key, key_size, ciphertext, ciphertext_size);
+
+    if (plaintext == NULL) {
+        printf("WARNING: NULL plaintext.\n");
+    } else {
+        printf("%s\n", plaintext);
+        free(plaintext);
+    }
 
     free(ciphertext);
 
-    return 0;*/
+    return 0;
+}
+
+int encryptor() {
+    char *filepath = NULL;
+    char *plaintext = NULL;
+    char *key = NULL;
+    size_t plaintext_size = 0;
+    size_t key_size = 0;
+    char *ciphertext = NULL;
+
+    filepath = get_option("file-path", NULL);
+    if (filepath == NULL) {
+        printf("ERROR: --file-path=<path> is missing.\n");
+        return 1;
+    }
+
+    key = get_option("key", NULL);
+    if (key == NULL) {
+        printf("ERROR: --key=<data> is missing.\n");
+        return 1;
+    }
+    key_size = strlen(key);
+
+    plaintext = ldbuf(filepath, &plaintext_size);
+
+    if (plaintext == NULL) {
+        printf("WARNING: NULL plaintext.\n");
+        return 1;
+    }
+
+    ciphertext = encrypt_buffer(key, key_size, plaintext, plaintext_size);
+
+    if (ciphertext == NULL) {
+        printf("WARNING: NULL ciphertext.\n");
+    } else {
+        printf("%s\n", ciphertext);
+        free(ciphertext);
+    }
+
+    free(plaintext);
+
+    return 0;
+}
+
+int new_puzzle() {
     return 0;
 }
 
@@ -233,6 +337,12 @@ int main(int argc, char **argv) {
         return guess_key();
     } else if (get_bool_option("assumption", 0)) {
         return assumption();
+    } else if (get_bool_option("decrypt", 0)) {
+        return decryptor();
+    } else if (get_bool_option("encrypt", 0)) {
+        return encryptor();
+    } else if (get_bool_option("new-puzzle", 0)) {
+        return new_puzzle();
     }
     return help();
 }

@@ -11,4 +11,6 @@ char *encrypt_buffer(const char *key, size_t key_size, const char *plaintext, co
 
 char *decrypt_buffer(const char *key, size_t key_size, const char *ciphertext, const size_t ciphertext_size);
 
+char eval_kn(const char c, const char m);
+
 #endif

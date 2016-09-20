@@ -3,6 +3,13 @@
 #include <string.h>
 #include <stdio.h>
 
+static char char_normalize(const char c);
+
+static char char_normalize(const char c) {
+    char rc = c;
+    return rc;
+}
+
 char *ldbuf(const char *filepath, size_t *buf_size) {
     char *buf = NULL, *bp = NULL, *bp_end = NULL, *bpp = NULL;
     FILE *fp = NULL;
@@ -35,7 +42,7 @@ char *ldbuf(const char *filepath, size_t *buf_size) {
     do {
         *bp = fgetc(fp);
         if (isalpha(*bp)) {
-            *bp = toupper(*bp);
+            *bp = char_normalize(toupper(*bp));
             bp++;
         }
     } while (!feof(fp));

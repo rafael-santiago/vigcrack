@@ -17,7 +17,14 @@ typedef char (*vigF)(const char k, const char c);
 #define vigenere_cipher_inv(k, c) ( g_vigenere_alpha[((get_letter_value(c) - get_letter_value(k)) < 0 ? 26 : 0) +\
                                                          (get_letter_value(c) - get_letter_value(k))] )
 
+#define vigenere_eval_k(m, c) ( g_vigenere_alpha[((get_letter_value(m) - get_letter_value(c)) < 0 ? 26 : 0) +\
+                                                     (get_letter_value(m) - get_letter_value(c))] )
+
 static char *process_buffer(const char *key, size_t key_size, vigF F, const char *buffer, const size_t buffer_size);
+
+char eval_kn(const char c, const char m) {
+    return vigenere_eval_k(m, c);
+}
 
 char encrypt(const char k, const char p) {
     return vigenere_cipher(k, p);
