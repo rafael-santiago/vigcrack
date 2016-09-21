@@ -10,7 +10,7 @@
 
 int help();
 
-int assumption();
+int hangman();
 
 int keyword_guesser();
 

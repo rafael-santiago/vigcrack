@@ -21,7 +21,7 @@ typedef void (*help_detailing)();
 
 static void keyword_guesser_details();
 
-static void assumption_details();
+static void hangman_details();
 
 static void decrypt_details();
 
@@ -37,6 +37,7 @@ static int is_number(const char *number) {
         if (!isdigit(*np)) {
             return 0;
         }
+        np++;
     }
     return 1;
 }
@@ -151,7 +152,7 @@ int help() {
     };
     struct see_also see_also[] = {
         { "keyword-guesser", keyword_guesser_details },
-        {      "assumption", assumption_details      },
+        {         "hangman", hangman_details         },
         {         "decrypt", decrypt_details         },
         {         "encrypt", encrypt_details         },
         {     "make-puzzle", make_puzzle_details     }
@@ -180,12 +181,12 @@ int help() {
     return 0;
 }
 
-static void assumption_details() {
-    printf("use: vigcrack --assumption --pattern=<data> --plaintext=<data> --key-len=<len> "
+static void hangman_details() {
+    printf("use: vigcrack --hangman --pattern=<data> --plaintext=<data> --key-len=<len> "
            "--file-path=<path> [--max-attempts=<amount>]\n");
 }
 
-int assumption() {
+int hangman() {
     char *pattern = NULL;
     size_t pattern_size = 0;
     char *plaintext = NULL;

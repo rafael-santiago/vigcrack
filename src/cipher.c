@@ -29,7 +29,7 @@ typedef char (*vigF)(const char k, const char c);
 
 static char *process_buffer(const char *key, size_t key_size, vigF F, const char *buffer, const size_t buffer_size);
 
-char eval_kn(const char c, const char m) {
+char eval_kn(const char m, const char c) {
     return vigenere_eval_k(m, c);
 }
 

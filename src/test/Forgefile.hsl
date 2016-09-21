@@ -1,0 +1,108 @@
+#
+#                                Copyright (C) 2016 by Rafael Santiago
+#
+# This is a free software. You can redistribute it and/or modify under
+# the terms of the GNU General Public License version 2.
+#
+#
+include ../Toolsets.hsl
+include ~/fsutil.hsl
+
+var sources type list;
+var includes type list;
+var cflags type list;
+var libraries type list;
+var ldflags type list;
+var appname type string;
+
+var toolset_name type string;
+
+project vigcrack-test : toolset $toolset_name : $sources, $includes, $cflags, $libraries, $ldflags, $appname;
+
+vigcrack-test.preloading() {
+    $toolset_name = get_toolset_basename() + "app";
+}
+
+vigcrack-test.prologue() {
+    $sources.ls(".*\\.c$");
+
+    $includes.add_item("cutest/src");
+
+    if (hefesto.sys.os_name() == "linux") {
+        $ldflags.add_item("-ldl");
+        $ldflags.add_item("-lpthread");
+    } else if (hefesto.sys.os_name() == "freebsd" ||
+               hefesto.sys.os_name() == "openbsd" ||
+               hefesto.sys.os_name() == "netbsd") {
+        $ldflags.add_item("-lexecinfo");
+        $ldflags.add_item("-lpthread");
+    } else if (hefesto.sys.os_name() == "minix") {
+        $ldflags.add_item("-lexecinfo");
+    }
+
+    if (hefesto.sys.os_name() == "windows") {
+        $appname = "vigtest.exe";
+    } else {
+        $appname = "vigtest";
+    }
+
+    if (isdir("/usr/local/include")) {
+        $includes.add_item("/usr/local/include");
+    }
+
+    if (isdir("/usr/local/lib")) {
+        $libraries.add_item("/usr/local/lib");
+    }
+
+    var exit_code type int;
+
+    if (hefesto.sys.cd("cutest/src")) {
+        $exit_code = hefesto.sys.forge("cutest",
+                                       "Forgefile.hsl",
+                     "--obj-output-dir=obj --bin-output-dir=lib --toolset=" + $toolset_name);
+        hefesto.sys.cd("../..");
+        if ($exit_code != 0) {
+            hefesto.project.abort($exit_code);
+        }
+    }
+
+    $libraries.add_item("cutest/src/lib");
+
+    $ldflags.add_item("-lcutest");
+
+    getobjs($ldflags);
+}
+
+vigcrack-test.epilogue() {
+    if (hefesto.sys.last_forge_result() == 0) {
+        var exit_code type int;
+        $exit_code = hefesto.sys.run("bin" / $appname);
+        if ($exit_code != 0) {
+            hefesto.project.abort($exit_code);
+        } else {
+            hefesto.sys.echo("\n*** ALL IS OK! ;)\n");
+        }
+    }
+}
+
+local function getobjs(ldflags type list) : result type none {
+    if (hefesto.sys.cd("../o")) {
+        $ldflags.ls(".*\\.o$");
+
+        hefesto.sys.cd("../test");
+
+        var l type int;
+        $l = 0;
+
+        while ($l < $ldflags.count()) {
+            var item type string;
+            $item = $ldflags.item($l);
+            if ($item.match(".*main\\.o$")) {
+                $ldflags.del_item($item);
+                break;
+            }
+            $l = $l + 1;
+        }
+        hefesto.sys.byref($ldflags);
+    }
+}

@@ -12,8 +12,8 @@ int main(int argc, char **argv) {
     set_argc_argv(argc, argv);
     if (get_bool_option("keyword-guesser", 0)) {
         return keyword_guesser();
-    } else if (get_bool_option("assumption", 0)) {
-        return assumption();
+    } else if (get_bool_option("hangman", 0)) {
+        return hangman();
     } else if (get_bool_option("decrypt", 0)) {
         return decryptor();
     } else if (get_bool_option("encrypt", 0)) {

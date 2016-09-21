@@ -49,7 +49,7 @@ char *get_key_by_assumed_plaintext(const char *plaintext, const size_t plaintext
     cp_end = cp + ciphertext_size;
 
     while (kp != kp_end && p != p_end && cp != cp_end) {
-        *kp = eval_kn(*cp, *p);
+        *kp = eval_kn(*p, *cp);
         kp++;
         p++;
         cp++;
