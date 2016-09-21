@@ -32,7 +32,9 @@ vigcrack.epilogue() {
         if (hefesto.sys.cd("test") == 0) {
             hefesto.project.abort(1);
         }
-        hefesto.sys.forge("vigcrack-test", "Forgefile.hsl", "--obj-output-dir=o --bin-output-dir=bin --toolset=" + $toolset_name);
+        hefesto.sys.forge("vigcrack-test",
+                          "Forgefile.hsl",
+          "--obj-output-dir=o --bin-output-dir=bin --toolset=" + $toolset_name);
         hefesto.sys.cd("..");
         if (hefesto.sys.last_forge_result() != 0) {
             hefesto.project.abort(hefesto.sys.last_forge_result());
