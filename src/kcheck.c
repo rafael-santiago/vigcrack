@@ -84,8 +84,8 @@ char *align_assumed_key(char *key, const size_t key_size, size_t *usage_count, s
     }
 
     if (found) {
-        ucount = ((cp_end - cp) - (cp_end - ciphertext)) / key_size;
-        upoint = ((cp_end - cp) - (cp_end - ciphertext)) % key_size;
+        ucount = (cp - ciphertext) / key_size;
+        upoint = (cp - ciphertext) % key_size;
 
         for (u = 0; u < upoint; u++) {
             rshkey(key, key_size);

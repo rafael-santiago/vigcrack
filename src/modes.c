@@ -265,8 +265,10 @@ int hangman() {
                             ciphertext,
                             ciphertext_size);
 
-    printf("\n*** The letter at position #%d was used to encipher it. "
-           "It was used '%d' times. The effective key is '%s'.\n", key_usage_point, key_usage_count, key);
+    printf("\n"
+           "*** The keyword was completely re-used %d times before.\n"
+           "    The keyword's letter at position #%d was used to encipher it.\n"
+           "    The effective keyword to encrypt the pattern was '%s'.\n", key_usage_count, key_usage_point + 1, key);
 
     printf("\n*** Decryption attempts assuming that '%s' leads to '%s'...\n\n", pattern, plaintext);
 
