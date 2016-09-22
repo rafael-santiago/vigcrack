@@ -195,6 +195,8 @@ static void eval_used_key_lengths(struct kprobs **probs, const size_t min_key_le
 
     pos = get_next_greater_non_zero_pos(mult);
 
+    memset(p->probable_keys, 0, sizeof(p->probable_keys));
+
     while (pos != -1) {
         sprintf(temp, "%d", pos);
         strncat(p->probable_keys, temp, sizeof(p->probable_keys) - 1);
@@ -204,6 +206,7 @@ static void eval_used_key_lengths(struct kprobs **probs, const size_t min_key_le
             strncat(p->probable_keys, ", ", sizeof(p->probable_keys) - 1);
         }
     }
+
 }
 
 static ssize_t get_next_greater_non_zero_pos(const size_t mult[0xffff]) {

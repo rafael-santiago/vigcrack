@@ -10,16 +10,16 @@
 
 int main(int argc, char **argv) {
     set_argc_argv(argc, argv);
-    if (get_bool_option("keyword-guesser", 0)) {
-        return keyword_guesser();
+    if (get_bool_option("sybil", 0)) {
+        return sybil();
     } else if (get_bool_option("hangman", 0)) {
         return hangman();
     } else if (get_bool_option("decrypt", 0)) {
         return decryptor();
     } else if (get_bool_option("encrypt", 0)) {
         return encryptor();
-    } else if (get_bool_option("make-puzzle", 0)) {
-        return mkpuzzle();
+    } else if (get_bool_option("riddler", 0)) {
+        return riddler();
     }
     return help();
 }

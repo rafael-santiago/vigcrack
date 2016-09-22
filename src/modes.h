@@ -12,12 +12,12 @@ int help();
 
 int hangman();
 
-int keyword_guesser();
+int sybil();
 
 int encryptor();
 
 int decryptor();
 
-int mkpuzzle();
+int riddler();
 
 #endif

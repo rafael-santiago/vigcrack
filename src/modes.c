@@ -19,7 +19,7 @@
 
 typedef void (*help_detailing)();
 
-static void keyword_guesser_details();
+static void sybil_details();
 
 static void hangman_details();
 
@@ -27,7 +27,7 @@ static void decrypt_details();
 
 static void encrypt_details();
 
-static void make_puzzle_details();
+static void riddler_details();
 
 static int is_number(const char *number);
 
@@ -42,12 +42,12 @@ static int is_number(const char *number) {
     return 1;
 }
 
-static void keyword_guesser_details() {
-    printf("use: vigcrack --keyword-guesser --filepath=<path> [--min-pattern-len=<len> "
+static void sybil_details() {
+    printf("use: vigcrack --sybil --filepath=<path> [--min-pattern-len=<len> "
            "--max-pattern-len=<len> --min-key-len=<len> --max-key-len=<len>\n");
 }
 
-int keyword_guesser() {
+int sybil() {
     char *filepath = NULL;
     char *ciphertext = NULL;
     size_t ciphertext_size = 0;
@@ -71,6 +71,12 @@ int keyword_guesser() {
 
     if (ciphertext == NULL) {
         printf("ERROR: NULL file ciphertext.\n");
+        return 1;
+    }
+
+    if (ciphertext_size == 0) {
+        printf("WARNING: The file seems empty, there is nothing to our Sybil inside it.\n");
+        free(ciphertext);
         return 1;
     }
 
@@ -151,11 +157,11 @@ int help() {
         help_detailing details;
     };
     struct see_also see_also[] = {
-        { "keyword-guesser", keyword_guesser_details },
+        {           "sybil", sybil_details           },
         {         "hangman", hangman_details         },
         {         "decrypt", decrypt_details         },
         {         "encrypt", encrypt_details         },
-        {     "make-puzzle", make_puzzle_details     }
+        {         "riddler", riddler_details         }
     };
     size_t see_also_nr = sizeof(see_also) / sizeof(see_also[0]), s = 0;
     char *mode = get_option("help", NULL);
@@ -401,13 +407,13 @@ static char *get_random_keyword(const size_t min_len, const size_t max_len) {
     return &keyword[0];
 }
 
-static void make_puzzle_details() {
-    printf("use: vigcrack --make-puzzle [--min-key-len=<len> --max-key-len=<len> "
-           "--plaintext-home=<directory-path> --show-keyword "
+static void riddler_details() {
+    printf("use: vigcrack --riddler [--min-key-len=<len> --max-key-len=<len> "
+           "--plaintexts-home=<directory-path> --show-keyword "
            "--save-keyword=<file-path> --save-as=<file-path>]\n");
 }
 
-int mkpuzzle() {
+int riddler() {
     char *plaintexts_home = NULL;
     char *language = NULL;
     DIR *plaintexts_dir = NULL;
