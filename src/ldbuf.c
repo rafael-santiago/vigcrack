@@ -103,7 +103,7 @@ char *ldbuf(const char *filepath, size_t *buf_size) {
         *bp = fgetc(fp);
         c = char_normalize(*bp);
         if (isalpha(c)) {
-            *bp = c;
+            *bp = toupper(c);
             bp++;
         }
     } while (!feof(fp));

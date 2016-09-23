@@ -10,6 +10,7 @@
 
 int main(int argc, char **argv) {
     set_argc_argv(argc, argv);
+
     if (get_bool_option("sybil", 0)) {
         return sybil();
     } else if (get_bool_option("hangman", 0)) {
@@ -20,7 +21,10 @@ int main(int argc, char **argv) {
         return encryptor();
     } else if (get_bool_option("riddler", 0)) {
         return riddler();
+    } else if (get_bool_option("brutus", 0)) {
+        return brutus();
     }
+
     return help();
 }
 

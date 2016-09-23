@@ -160,9 +160,29 @@ The ``--file-path`` indicates the cryptogram's path and the option ``--max-attem
 	__________________
 
 ```
+
 The ``Hangman`` is interactive and you can get lots of fun when you start making right assumptions.
 
 However, Eve have seen that her guessing did not produced a legible output. So, she returned to the pattern listing and
-started trying other ones.
+started trying other ones. After several attempts she have decided to use another application mode called ``brutus``.
+
+## The Brutus
+
+Well, in fact the ``brutus`` mode does what the ``hangman`` does but automated. Then, Eve have emitted the following
+command into her terminal:
+
+```
+eve@EDEN:~/src/tree/sin/curiosity# vigcrack --brutus --file-path=alice-bob-crap.txt\
+> --plaintexts=the,and,ing,ent,ion,nth,ter,int,oft,tha,ere,tio,her,fth,eth,ati,hat,ate,sth,est\
+> --key-len=3 > report.txt
+```
+
+With this command ``brutus`` tries to decipher any found pattern to the informed plaintexts assuming the passed key length.
+
+Eve got the following data into ``report.txt`` file:
+
+```
+(...)
+```
 
 Enjoy!

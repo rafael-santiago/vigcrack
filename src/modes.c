@@ -29,6 +29,8 @@ static void encrypt_details();
 
 static void riddler_details();
 
+static void brutus_details();
+
 static int is_number(const char *number);
 
 static int is_number(const char *number) {
@@ -161,7 +163,8 @@ int help() {
         {         "hangman", hangman_details         },
         {         "decrypt", decrypt_details         },
         {         "encrypt", encrypt_details         },
-        {         "riddler", riddler_details         }
+        {         "riddler", riddler_details         },
+        {          "brutus", brutus_details          }
     };
     size_t see_also_nr = sizeof(see_also) / sizeof(see_also[0]), s = 0;
     char *mode = get_option("help", NULL);
@@ -203,6 +206,7 @@ int hangman() {
     char *ciphertext = NULL, *cp = NULL, *cp_end = NULL;
     size_t ciphertext_size = 0;
     char *key = NULL;
+    char *end = NULL, *p = NULL;
 
     pattern = get_option("pattern", NULL);
 
@@ -213,6 +217,13 @@ int hangman() {
 
     pattern_size = strlen(pattern);
 
+    p = pattern;
+    end = pattern + pattern_size;
+    while (p != end) {
+        *p = toupper(*p);
+        p++;
+    }
+
     plaintext = get_option("plaintext", NULL);
 
     if (plaintext == NULL) {
@@ -221,6 +232,13 @@ int hangman() {
     }
 
     plaintext_size = strlen(plaintext);
+
+    p = plaintext;
+    end = plaintext + plaintext_size;
+    while (p != end) {
+        *p = toupper(*p);
+        p++;
+    }
 
     if (plaintext_size != pattern_size) {
         printf("ERROR: --plaintext has data of wrong size.\n");
@@ -517,3 +535,105 @@ int riddler() {
     return 0;
 }
 
+static void brutus_details() {
+    printf("use: vigcrack --brutus --file-path=<file-path> --plaintexts=<p_0>,...,<p_n> --key-len=<len>\n");
+}
+
+int brutus() {
+    char *filepath = NULL;
+    char *plaintexts = NULL;
+    char *p = NULL, *p_end = NULL;
+    char curr_plaintext[255] = "";
+    size_t curr_plaintext_size = 0;
+    size_t c = 0;
+    struct kprobs *kp = NULL;
+    struct found_pattern *fp = NULL;
+    char *ciphertext = NULL;
+    size_t ciphertext_size = 0;
+    size_t key_len = 0;
+    char *keyword = NULL;
+    size_t ucount = 0, upoint = 0;
+    char *plaintext = NULL;
+
+    filepath = get_option("file-path", NULL);
+
+    if (filepath == NULL) {
+        printf("ERROR: --file-path=<file-path> is missing.\n");
+        return 1;
+    }
+
+    plaintexts = get_option("plaintexts", NULL);
+
+    if (plaintexts == NULL) {
+        printf("ERROR: --plaintexts=<p_0>,...,<p_n> is missing.\n");
+        return 1;
+    }
+
+    key_len = atoi(get_option("key-len", "0"));
+
+    if (key_len == 0) {
+        printf("ERROR: --key-len=<len> is missing or has invalid size.\n");
+        return 1;
+    }
+
+    ciphertext = ldbuf(filepath, &ciphertext_size);
+
+    p = plaintexts;
+    p_end = plaintexts + strlen(plaintexts);
+
+    while (p < p_end) {
+        c = 0;
+        while (p != p_end && *p != ',') {
+            if (*p != ' ') {
+                curr_plaintext[c] = toupper(*p);
+                c++;
+            }
+            p++;
+        }
+        p++;
+        curr_plaintext[c] = 0;
+        curr_plaintext_size = strlen(curr_plaintext);
+
+        kp = kguesser(ciphertext, ciphertext_size, curr_plaintext_size, curr_plaintext_size, key_len, key_len);
+
+        for (fp = kp->patterns; fp != NULL; fp = fp->next) {
+            if (fp->mult_nr == 0) {
+                continue;
+            }
+
+            keyword = get_key_by_assumed_plaintext(curr_plaintext, curr_plaintext_size, fp->pattern, curr_plaintext_size, key_len);
+
+            if (keyword == NULL) {
+                continue;
+            }
+
+            align_assumed_key(keyword, key_len, &ucount, &upoint, fp->pattern, curr_plaintext_size, ciphertext, ciphertext_size);
+
+            plaintext = decrypt_buffer(keyword, key_len, ciphertext, ciphertext_size);
+
+            if (plaintext != NULL) {
+                printf("*** Assuming %s -> %s (keyword = \"%s\")\n\n"
+                       "\tK = ", fp->pattern, curr_plaintext, keyword);
+                for (c = 0; c < ciphertext_size; c += key_len) {
+                    printf("%s", keyword);
+                }
+                printf("\n"
+                       "\tC = %s\n"
+                       "\tP = %s\n\n", ciphertext, plaintext);
+            }
+
+            free(keyword);
+
+            free(plaintext);
+        }
+
+        if (kp != NULL) {
+            free_kprobs(kp);
+            kp = NULL;
+        }
+    }
+
+    free(ciphertext);
+
+    return 0;
+}

@@ -20,4 +20,6 @@ int decryptor();
 
 int riddler();
 
+int brutus();
+
 #endif
