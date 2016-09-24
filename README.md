@@ -1,4 +1,4 @@
-# Vigcrack
+# vigcrack
 
 *An old trinket from 2005/2003.*
 
@@ -680,4 +680,4 @@ eve@EDEN:~/src/tree/sin/curiosity# vigcrack --riddler --save-as=challenge.txt\
 
 ```
 
-Well, "That's all folks..." enjoy!
+Well, "That's all folks..." enjoy! ;)
