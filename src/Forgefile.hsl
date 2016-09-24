@@ -6,6 +6,7 @@
 #
 #
 include Toolsets.hsl
+include Install.hsl
 include ~/toolsets/common/utils/lang/c/dependency_scanner.hsl
 
 var sources type list;
@@ -24,6 +25,7 @@ project vigcrack : toolset $toolset_name : dependencies get_c_cpp_deps() :
     $sources, $includes, $cflags, $libraries, $ldflags, "vigcrack";
 
 vigcrack.prologue() {
+    vigcrack_installer();
     $sources.ls(".*\\.c$");
 }
 

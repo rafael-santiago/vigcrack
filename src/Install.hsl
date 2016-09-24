@@ -1,0 +1,193 @@
+#
+#                                Copyright (C) 2016 by Rafael Santiago
+#
+# This is a free software. You can redistribute it and/or modify under
+# the terms of the GNU General Public License version 2.
+#
+#
+include ~/fsutil.hsl
+
+function vigcrack_installer() : result type none {
+    var option type list;
+
+    $option = hefesto.sys.get_option("install");
+    if ($option.count() > 0) {
+        hefesto.project.abort(vigcrack_install());
+    }
+
+    $option = hefesto.sys.get_option("uninstall");
+    if ($option.count() > 0) {
+        hefesto.project.abort(vigcrack_uninstall());
+    }
+}
+
+local function askuser(message type string, options type list) : result type string {
+    var final_message type string;
+
+    $final_message = $message + " [";
+
+    var o type int;
+
+    while ($o < $options.count()) {
+        $final_message = $final_message + $options.item($o);
+
+        $o = $o + 1;
+
+        if ($o != $options.count()) {
+            $final_message = $final_message + "/";
+        } else  {
+            $final_message = $final_message + "] ";
+        }
+    }
+
+    var opt type string;
+
+    $opt = "";
+
+    while ($options.index_of($opt) == -1) {
+        $opt = hefesto.sys.prompt($final_message);
+    }
+
+    result $opt;
+}
+
+local function vigcrack_install() : result type int {
+    var binname type string;
+    var binpath type string;
+    var manpath type string;
+    var docpath type string;
+    var bintarget type string;
+
+    if (hefesto.sys.os_name() == "windows") {
+        $binname = "vigcrack.exe";
+        $binpath = "C:\\vigcrack\\bin";
+        $docpath = "C:\\vigcrack\\doc";
+    } else {
+        $binname = "vigcrack";
+        $binpath = "/usr/local/bin/";
+        $manpath = "/usr/local/man/man1/";
+        $docpath = "/usr/local/share/vigcrack/doc";
+    }
+
+    if (isfile(hefesto.sys.make_path("bin", $binname)) == 0) {
+        var exit_code type int;
+        $exit_code = hefesto.sys.run("hefesto");
+        if ($exit_code != 0) {
+            hefesto.sys.echo("INSTALL ERROR: unable to build vigcrack.\n");
+            result 1;
+        }
+    }
+
+    $bintarget = hefesto.sys.make_path($binpath, $binname);
+
+    var options type list;
+    $options.add_item("y");
+    $options.add_item("n");
+    $options.add_item("c");
+
+    var opt type string;
+
+    $opt = "?";
+
+    while (isfile($bintarget) && $opt != "y") {
+        var newtarget type string;
+        $opt = askuser("The binary path already exists. Do you want to overwrite it?", $options);
+
+        if ($opt == "c") {
+            hefesto.sys.echo("INSTALL ERROR: aborted by the user.\n");
+            result 1;
+        }
+
+        if ($opt == "n") {
+            var temp type string;
+            $temp = hefesto.sys.prompt("Type the new binary's name or \"cancel\" to abort: ");
+            if ($temp == "cancel") {
+                hefesto.sys.echo("INSTALL ERROR: aborted by the user.\n");
+                result 1;
+            }
+            $bintarget = hefesto.sys.make_path($binpath, $temp);
+        }
+    }
+
+    mktree($binpath);
+
+    if (hefesto.sys.cp(hefesto.sys.make_path("bin", $binname), $bintarget) != 1) {
+        hefesto.sys.echo("INSTALL ERROR: during the binary's copy.\n");
+        result 1;
+    }
+
+    mktree($docpath);
+
+    if (hefesto.sys.cp(hefesto.sys.make_path("../", "README.md"), hefesto.sys.make_path($docpath, "README.md")) != 1) {
+        hefesto.sys.echo("INSTALL WARNING: unable to copy the README.md file.\n");
+    }
+
+    if (hefesto.sys.os_name() != "windows") {
+        mktree($manpath);
+        if (hefesto.sys.cp(hefesto.sys.make_path("../doc/man", "vigcrack.1"),
+                           hefesto.sys.make_path($manpath, "vigcrack.1")) != 1) {
+            hefesto.sys.echo("INSTALL WARNING: unable to copy the man path file.\n");
+        }
+    }
+
+    hefesto.sys.echo("*** vigcrack was installed.\n");
+
+    result 0;
+}
+
+local function vigcrack_uninstall() : result type int {
+    var options type list;
+    var exit_code type int;
+
+    $exit_code = 1;
+
+    $options.add_item("y");
+    $options.add_item("n");
+
+    if (askuser("Do you want to uninstall vigcrack?", $options) == "y") {
+        var burn_list type list;
+        if (hefesto.sys.os_name() == "windows") {
+            $burn_list.add_item("C:\\vigcrack\\bin\\vigcrack.exe");
+            $burn_list.add_item("C:\\vigcrack\\doc\\README.md");
+            $burn_list.add_item("C:\\vigcrack\\bin");
+            $burn_list.add_item("C:\\vigcrack\\doc");
+            $burn_list.add_item("C:\\vigcrack");
+        } else {
+            $burn_list.add_item("/usr/local/bin/vigcrack");
+            $burn_list.add_item("/usr/local/share/vigcrack/doc/README.md");
+            $burn_list.add_item("/usr/local/man/man1/vigcrack.1");
+            $burn_list.add_item("/usr/local/share/vigcrack/doc/");
+            $burn_list.add_item("/usr/local/share/vigcrack");
+        }
+
+        var b type int;
+        var res type int;
+
+        $exit_code = 0;
+
+        $res = 1;
+        $b = 0;
+
+        while ($b < $burn_list.count() && $res == 1) {
+            var path type string;
+            $path = $burn_list.item($b);
+
+            if (isdir($path)) {
+                $res = (hefesto.sys.rmdir($path) == 0);
+            } else {
+                $res = (hefesto.sys.rm($path) == 0);
+            }
+
+            $b = $b + 1;
+        }
+
+        if ($res != 1) {
+            hefesto.sys.echo("UNINSTALL ERROR: process aborted.\n");
+            $exit_code = 1;
+        } else {
+            hefesto.sys.echo("*** vigcrack was uninstalled.\n");
+        }
+    }
+
+    result $exit_code;
+}
