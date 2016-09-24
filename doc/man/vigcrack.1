@@ -1,0 +1,62 @@
+.TH vigcrack 1 "September 24, 2016" "version 0.0.2" "USER COMMANDS"
+.SH NAME
+vigcrack \- a Vigenere cryptoanalysis tool
+.SH SYNOPSIS
+.B pig [\fIOPTIONS\fR]
+.SH DESCRIPTION
+\fIVigcrack\fR is a cryptoanalysis tool which can help on crack \fIVigenère\fR ciphertexts. This tool is not strictly based on
+\fIBabbage's\fR/\fIKasiski's\fR approach. In fact, here is not performed frequency analysis. Here what we get is a more brainy
+\fIHangman\fR which does not hang any innocent stick figure...
+.PP
+I have developed this tool during my first reading of \fIThe Code Book\fR from \fISimon Singh\fR. Here you got a "reissue" from
+this crypto-tool.
+
+.SH OPTIONS
+.TP
+\-\-file-path=\fI<path>\fR
+Indicates the file path of the input (usually a Vigenere cryptogram).
+
+.TP
+\-\-key=\fI<data>\fR
+Specifies the keyword for being used during the process.
+
+.TP
+\-\-min-key-len=\fI<len>\fR
+Specifies the minimal keyword length.
+
+.TP
+\-\-max-key-len=\fI<len>\fR
+Specifies the maximium keyword length.
+
+.TP
+\-\-help
+Invokes the general software help.
+
+.TP
+\-\-help=\fI<mode-name>\fR
+Invokes the general software help of a given mode.
+
+.TP
+\-\-version
+Shows the application version.
+
+.PP
+This software implements several operation modes you should consult the general help for knowing more about each available
+operation mode.
+
+.PP
+.SH EXIT STATUS
+If the execution succeeds vigcrack returns zero, otherwise non zero value will be returned.
+
+.PP
+.SH
+SEE ALSO
+.TP
+\fI/usr/local/share/vigcrack/doc\fR (or equivalent in your system)
+.PP
+.SH
+HOMEPAGE
+.TP
+https://github.com/rafael-santiago/vigcrack
+.SH AUTHOR
+Rafael Santiago <voidbrainvoid@gmail.com>
