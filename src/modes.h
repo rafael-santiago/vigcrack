@@ -22,4 +22,6 @@ int riddler();
 
 int brutus();
 
+int version();
+
 #endif

@@ -23,6 +23,8 @@ int main(int argc, char **argv) {
         return riddler();
     } else if (get_bool_option("brutus", 0)) {
         return brutus();
+    } else if (get_bool_option("version", 0)) {
+        return version();
     }
 
     return help();

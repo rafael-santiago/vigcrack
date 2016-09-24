@@ -33,6 +33,11 @@ static void brutus_details();
 
 static int is_number(const char *number);
 
+int version() {
+    printf("vigcrack v0.0.2\n");
+    return 0;
+}
+
 static int is_number(const char *number) {
     const char *np = number;
     while (*np != 0) {
@@ -285,10 +290,10 @@ int hangman() {
 
     printf("\n"
            "*** The keyword was completely re-used %d times before.\n"
-           "    The keyword's letter at position #%d was used to encipher it.\n"
+           "    The keyword's letter at position #%d was used to encrypt it.\n"
            "    The effective keyword to encrypt the pattern was '%s'.\n", key_usage_count, key_usage_point + 1, key);
 
-    printf("\n*** Decryption attempts assuming that '%s' leads to '%s'...\n\n", pattern, plaintext);
+    printf("\n*** Decrypt attempts assuming that '%s' leads to '%s'...\n\n", pattern, plaintext);
 
     cp = ciphertext;
     cp_end = cp + ciphertext_size;

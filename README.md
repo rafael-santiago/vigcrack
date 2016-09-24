@@ -6,6 +6,9 @@
 ``Babbage's``/``Kasiski's`` approach. In fact, here is not performed frequency analysis. Here what we get is a more brainy
 ``Hangman`` which does not hang any innocent stick figure...
 
+I have developed this tool during my first reading of ``The Code Book`` from ``Simon Singh``. Here you got a "reissue" from
+this crypto-tool.
+
 ## How to build it?
 
 For building this software you need to use [Hefesto](https://github.com/rafael-santiago/hefesto). After following the
@@ -18,13 +21,27 @@ babbage@DiffEngine:~/src/vigcrack/src# hefesto
 
 After invoking the hefesto command you should get the ``Vigcrack`` binary inside the sub-directory ``bin``.
 
+## Can I install it?
+
+Yes, for installing:
+
+```
+babbage@DiffEngine:~/src/vigcrack# hefesto --install
+```
+
+For uninstalling:
+
+```
+babbage@DiffEngine:~/src/vigcrack# hefesto --uninstall
+```
+
 ## How to use it?
 
-The ``Vigcrack`` is a software that introduces several operation modes. All of them related with the
+The ``Vigcrack`` is a software which introduces several operation modes. All of them related with the
 cryptoanalysis of the ``Vigenère`` cipher.
 
-In order to introduce you these operation modes I will use the basic workflow of it which is based on the necessity of
-crack some encrypted data. So, let's use or good and old "crypto-actors": Alice, Bob and Eve.
+In order to introduce you these operation modes I will use the basic workflow which is based on the necessity of
+cracking some encrypted data. So, let's use our good and old "crypto-actors": Alice, Bob and Eve.
 Spoiler: today Eve will win! Come on, I think that she deserves, [look](https://xkcd.com/177).
 
 Let's suppose that Bob sent to Alice the following message:
@@ -40,11 +57,11 @@ GNL
 ```
 ## The Sybil
 
-Eve is a "Network geek" so she has been listed the Alice/Bob's wire and intercepted the previous data. Eve knows that
+Eve is a "Network geek" so she has been listened the Alice/Bob's wire intercepting the previous data. Eve knows that
 Alice and Bob are pretty naive. So after trying to crack the cryptogram using simple substitutions without success, she
-start assuming the ``Vigenère``cipher usage (due to the frequency distribution). By the way, Eve has installed a nice
-[software](https://github.com/rafael-santiago/vigcrack) ;)... The first thing that our sympathetic attacker did with
-this tool was query a smart Sybil:
+start assuming the ``Vigenère`` cipher usage (due to the frequency distribution). By the way, Eve has installed a nice
+[software](https://github.com/rafael-santiago/vigcrack) (...) The first thing that our sympathetic attacker did with
+this tool was query a smart ``Sybil``:
 
 ```
 eve@EDEN:~/src/tree/sin/curiosity# vigcrack --sybil \
@@ -90,13 +107,13 @@ INFO: Now guessing the key length... please wait...
 *** Probable key lengths [most - least]: 3, 9, 2, 6, 18, 4, 5, 11, 12, 15, 8, 19, 7, 10, 13, 16, 20, 14.
 ```
 
->Why Eve ran that previous command? Why that pattern lengths?
+>Why Eve ran the previous command? Why that pattern lengths?
 
-Well, ``Vigcrack`` can predict the length of the keyword just verifying some characteristics onto the cryptogram. Its
-``Sybil`` tell us at the end of the analysis report the most probable keyword lengths. The reason for
+Well, the ``Vigcrack's sybil`` can predict the length of the keyword just verifying some characteristics onto the cryptogram.
+Its ``Sybil`` tell us at the end of the analysis report the most probable keyword lengths (sorted by relevance). The reason for
 using the options ``--min-pattern-len=3`` and ``--max-pattern-len=3`` is because Eve is smart. The keyword guessing is
-done by found patterns along the cryptogram. Eve supposed that the plaintext was in English and she knows that trigrams
-are pretty common in a English text. Things like ``THE``, ``AND``, ``SHE``, ``HIS``, ``HER``, etc (etc not so).
+done by found patterns along the cryptogram. Eve supposed that the plaintext was in English and she knows that
+trigrams are pretty common in a English text. Things like ``THE``, ``AND``, ``SHE``, ``HIS``, ``HER``, etc (no, etc not so).
 
 At the end of the report the ``Sybil`` has shown to Eve that there is a strong possibility of a 3-letter
 keyword usage.
@@ -120,10 +137,10 @@ The ``--file-path`` indicates the cryptogram's path and the option ``--max-attem
 
 ```
 *** The keyword was completely re-used 102 times before.
-    The keyword's letter at position #1 was used to encipher it.
+    The keyword's letter at position #1 was used to encrypt it.
     The effective keyword to encrypt the pattern was 'NVE'.
 
-*** Decryption attempts assuming that 'GCI' leads to 'THE'...
+*** Decrypt attempts assuming that 'GCI' leads to 'THE'...
 
 	K	C	P
 	__________________
@@ -178,7 +195,7 @@ eve@EDEN:~/src/tree/sin/curiosity# vigcrack --brutus --file-path=alice-bob-crap.
 ```
 
 With this command ``brutus`` tries to decipher any found pattern to the informed plaintexts assuming the passed key length.
-The informed plaintexts in this command sample are the most common trigrams present in English plaintexts.
+The informed plaintexts in this command sample are the most common trigrams present in English texts.
 
 Eve got the following data into ``report.txt`` file:
 
@@ -308,7 +325,7 @@ She started found some relevant attempts, look:
 	P = YelhJVGIOVasaDRGVIEanjPTUCYDlaiFMQFETnmkWEOGNVtocJVGKTCwauZOWXEIotoPMGVHKngeVNFGRUtajEHQNDKtijUIIJTNycwMLQPCQmmwODNGARofbBIVJDQyoqEOWDTEutuPUKPILuspDUVAOWoupXHCVEXeruPUFQDQntpFLNCNAonaXHCVEXeruPUFQDQntpFLNCNAonaMOQMFQrraGLGETKonoJNAQUTfayFCCPIPedaWOVKOPtiiFCCPTGraoFOWVOPthaDOTPETloyLEFKNAounSOQOIPevaSBGNIGvepIEOKNGvenBSUWMGstqDKKPBGliaGTJGRGiswMIGRRQmioFIURRQmioFAPGYGfonBNGAEYevaHOVUOOetdJNIVOTevaBLPQOPecwOKPQWJoweUFGGLUwhwUEXGRAouzPDQPTVelhBNAQNGwhwUEXGRAouzPDQPTVelhBNAQNGwhwUEXGRAouzPDQPTVelhBNAQNGwhwUEXGRAouzPDQPTVelhJTJKNMyoqBLTGAFykjPWJQWHareEGQPOVtooBYAQUMnosUHGCRVisjUGQPEKmtwLIPIMAsojHTQVHGgrwWEYJAVevaSYQWDQdojUTGNLCnykOEYJAVevaSYQWDQdojUTGNLCnykOEYJAVevaSYQWDQdojUTGNLCnykOEYJAVevaSYQWDQdojUTGNL
 ```
 
-Some letter contacts seem good. She figured out an interesting pattern:
+Some letter contacts seem pretty good. She figured out an interesting pattern:
 
 ```
 (...)*HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA******HEA*****
@@ -316,8 +333,8 @@ Some letter contacts seem good. She figured out an interesting pattern:
 (...)GvenBSUWMGstqDKKPBGliaGTJGRGiswMIGRRQmioFIURRQmioFAPGYGfonBNGAEYevaHOVUOOetdJNIVOTevaBLPQOPecwOKPQWJoweUFGGLUwhwUEXGRAouzPDQPTVelhBNAQNGwhwUEXGRAouzPDQPTVelhBNAQNGwhwUEXGRAouzPDQPTVelhBNAQNGwhwUEXGRAouzPDQPTVelhJTJKNMyoqBLTGAFykjPWJQWHareEGQPOVtooBYAQUMnosUHGCRVisjUGQPEKmtwLIPIMAsojHTQVHGgrwWEYJAVevaSYQWDQdojUTGNLCnykOEYJAVevaSYQWDQdojUTGNLCnykOEYJAVevaSYQWDQdojUTGNLCnykOEYJAVevaSYQWDQdojUTGNL
 ```
 
-The sequence ``GCIN`` could be explained by a plaintext being ``even``, because the deciphering attempt was ``GCIN = Geven``.
-By the way un-deciphered letters are preserved in upper case on the plaintext.
+The sequence ``GCIN`` could be explained by a plaintext being ``even``, because the decrypt attempt was ``GCIN = Gven``.
+By the way not decrypted letters are preserved in upper case on the plaintext.
 
 Now she got a good assumption to test with the ``Hangman``:
 
@@ -330,10 +347,10 @@ The output was:
 
 ```
 *** The keyword was completely re-used 35 times before.
-    The keyword's letter at position #1 was used to encipher it.
+    The keyword's letter at position #1 was used to encrypt it.
     The effective keyword to encrypt the pattern was 'CHEA*****'.
 
-*** Decryption attempts assuming that 'GCIN' leads to 'EVEN'...
+*** Decrypt attempts assuming that 'GCIN' leads to 'EVEN'...
 
 	K	C	P
 	__________________
@@ -357,10 +374,10 @@ eve@EDEN:~/src/tree/sin/curiosity# vigcrack --hangman --pattern=YLPHJVG\
 > --plaintext=WELCOME --key-len=9 --max-attempts=20 --file-path=alice-bob-crap.txt
 
 *** The keyword was completely re-used 0 times before.
-    The keyword's letter at position #1 was used to encipher it.
+    The keyword's letter at position #1 was used to encrypt it.
     The effective keyword to encrypt the pattern was 'CHEFVJC**'.
 
-*** Decryption attempts assuming that 'YLPHJVG' leads to 'WELCOME'...
+*** Decrypt attempts assuming that 'YLPHJVG' leads to 'WELCOME'...
 
 	K	C	P
 	__________________
@@ -388,7 +405,7 @@ eve@EDEN:~/src/tree/sin/curiosity# vigcrack --hangman --pattern=YLPHJVG\
 
 ```
 
-The sequence ``tasvi`` does not remember anything written in English. So, with this clue she started to consider only
+The sequence ``tasvi`` does not remember anything written in English. So, with this clue, she started to consider only
 ``YLP -> WEL``. If ``YLPH`` is not ``WELC`` maybe it could be ``WELL``:
 
 ```
@@ -396,10 +413,10 @@ eve@EDEN:~/src/tree/sin/curiosity# vigcrack --hangman --pattern=YLPH\
 > --plaintext=WELL --key-len=9 --max-attempts=20 --file-path=alice-bob-crap.txt
 
 *** The keyword was completely re-used 0 times before.
-    The keyword's letter at position #1 was used to encipher it.
+    The keyword's letter at position #1 was used to encrypt it.
     The effective keyword to encrypt the pattern was 'CHEW*****'.
 
-*** Decryption attempts assuming that 'YLPH' leads to 'WELL'...
+*** Decrypt attempts assuming that 'YLPH' leads to 'WELL'...
 
 	K	C	P
 	__________________
@@ -428,7 +445,7 @@ eve@EDEN:~/src/tree/sin/curiosity# vigcrack --hangman --pattern=YLPH\
 
 ```
 
-The letter contacts looks good excepting ``tasce`` but she tried more decryptions considering this assumption:
+The letter contacts looks good excepting for ``tase`` but she tried more decryptions considering this assumption:
 
 ```
 eve@EDEN:~/src/tree/sin/curiosity# vigcrack --hangman --pattern=YLPH\
@@ -436,10 +453,10 @@ eve@EDEN:~/src/tree/sin/curiosity# vigcrack --hangman --pattern=YLPH\
 
 
 *** The keyword was completely re-used 0 times before.
-    The keyword's letter at position #1 was used to encipher it.
+    The keyword's letter at position #1 was used to encrypt it.
     The effective keyword to encrypt the pattern was 'CHEW*****'.
 
-*** Decryption attempts assuming that 'YLPH' leads to 'WELL'...
+*** Decrypt attempts assuming that 'YLPH' leads to 'WELL'...
 
 	K	C	P
 	__________________
@@ -477,17 +494,17 @@ eve@EDEN:~/src/tree/sin/curiosity# vigcrack --hangman --pattern=YLPH\
 
 ```
 
-Yes, ``EHRJPT -> cannPT`` suggests ``cannot``, so she tried it:
+Yes, ``EHRJPT -> cannPT`` suggests ``cannot``, so she tried it on ``hangman``:
 
 ```
 eve@EDEN:~/src/tree/sin/curiosity# vigcrack --hangman --pattern=EHRJPT\
 > --plaintext=cannot --key-len=9 --max-attempts=30 --file-path=alice-bob-crap.txt
 
 *** The keyword was completely re-used 2 times before.
-    The keyword's letter at position #1 was used to encipher it.
+    The keyword's letter at position #1 was used to encrypt it.
     The effective keyword to encrypt the pattern was 'CHEWBA***'.
 
-*** Decryption attempts assuming that 'EHRJPT' leads to 'CANNOT'...
+*** Decrypt attempts assuming that 'EHRJPT' leads to 'CANNOT'...
 
 	K	C	P
 	__________________
@@ -525,7 +542,7 @@ eve@EDEN:~/src/tree/sin/curiosity# vigcrack --hangman --pattern=EHRJPT\
 
 ```
 
-Still good, and it revealed to her ``JVG -> ivG``. It strongly suggests ``ive [I've]``. Continuing she saw another obvious
+Still good and it has revealed to her ``JVG -> ivG``. It strongly suggests ``ive [I've]``. Continuing she saw another obvious
 pattern ``WADRGV -> secreGV`` suggesting ``secret``. She tried this pattern:
 
 ```
@@ -534,10 +551,10 @@ eve@EDEN:~/src/tree/sin/curiosity# vigcrack --hangman --pattern=WADRGV\
 
 
 *** The keyword was completely re-used 1 times before.
-    The keyword's letter at position #3 was used to encipher it.
+    The keyword's letter at position #3 was used to encrypt it.
     The effective keyword to encrypt the pattern was '**EWBACC*'.
 
-*** Decryption attempts assuming that 'WADRGV' leads to 'SECRET'...
+*** Decrypt attempts assuming that 'WADRGV' leads to 'SECRET'...
 
 	K	C	P
 	__________________
@@ -575,12 +592,12 @@ eve@EDEN:~/src/tree/sin/curiosity# vigcrack --hangman --pattern=WADRGV\
 
 ```
 
-Now everything makes sense. So, she found the another keyword part, combining the two into one:
+Now all makes sense. So, she found the another keyword part, combining the two into one:
 
 ```
   CHEWBA***
 | **EWBACC*
------------
+  ---------
   CHEWBACC*
 ```
 
@@ -603,4 +620,64 @@ lithinkyoualreadyknowhowfaridgonottosayyouknowtheartisntgoneimtakingmysongtotheg
 anyonewhateveryoudodonttellanyonewhateveryoudodonttellanyonewhateveryoudodonttell
 ```
 
-She cracked the ciphertext. The plaintext is the lyrics of ``The Lost Art of Keeping a Secret``.
+She cracked the ciphertext. The plaintext is the lyrics of the song ``The Lost Art of Keeping a Secret``
+from ``Queens of The Stone Age``.
+
+## The encrypt mode
+
+This mode just applies the standard ``Vigenère`` cipher. The usage is pretty simple, look:
+
+```
+eve@EDEN:~/src/tree/sin/curiosity# vigcrack --encrypt --key=chewbacca\
+> --file-path=the-lost-art-of-keeping-a-secret.txt > out.txt
+
+```
+
+## The Riddler
+
+The ``riddler`` mode can be used to generate puzzles for being cracked with the own ``vigcrack``. This mode
+works by picking up a plaintext from a specified directory and encrypting it using a pseudo-random key.
+
+Well, the basic usage of this mode is:
+
+```
+eve@EDEN:~/src/tree/sin/curiosity# vigcrack --riddler --save-as=challenge.txt
+
+```
+
+With the command shown above, the ``vigcrack`` will find for a sub-directory called ``plaintexts``. It is also
+expecting the existence of several ``.txt`` files (the plaintexts) inside of this sub-directory.
+
+Now, supposing that you organized it better, separating texts by language into other sub-directories, in this case:
+
+```
+eve@EDEN:~/src/tree/sin/curiosity# vigcrack --riddler --save-as=challenge.txt\
+> --plaintexts-home=/usr/local/share/corpora/en
+```
+
+You can also specify the minimal and maximium keyword length:
+
+```
+eve@EDEN:~/src/tree/sin/curiosity# vigcrack --riddler --save-as=challenge.txt\
+> --plaintexts-home=/usr/local/share/corpora/en --min-key-len=3 --max-key-len=5
+```
+
+You can also show the keyword, for cases when you send the challenge for someone:
+
+```
+eve@EDEN:~/src/tree/sin/curiosity# vigcrack --riddler --save-as=challenge.txt\
+> --plaintexts-home=/usr/local/share/corpora/en --min-key-len=3 --max-key-len=5\
+> --show-keyword
+
+```
+
+Maybe even during your own puzzles you want to save the keyword for consulting if it gets really hard:
+
+```
+eve@EDEN:~/src/tree/sin/curiosity# vigcrack --riddler --save-as=challenge.txt\
+> --plaintexts-home=/usr/local/share/corpora/en --min-key-len=3 --max-key-len=5\
+> --save-keyword=answer.txt
+
+```
+
+Well, "That's all folks..." enjoy!
