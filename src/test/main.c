@@ -199,7 +199,7 @@ CUTE_TEST_CASE(binpoking_tests)
     sleep(3);
 #endif
     char *known_modes[] = {
-        "sybil", "hangman", "decrypt", "encrypt", "riddler"
+        "sybil", "hangman", "decrypt", "encrypt", "riddler", "brutus"
     };
     size_t known_modes_nr = sizeof(known_modes) / sizeof(known_modes[0]), k = 0;
     char cmdline[255] = "";
@@ -244,6 +244,9 @@ CUTE_TEST_CASE(binpoking_tests)
     CUTE_ASSERT(system(cmdline) == 0);
 
     sprintf(cmdline, "%s --decrypt --file-path=poking-test.txt --key=chewbacca");
+    CUTE_ASSERT(system(cmdline) == 0);
+
+    sprintf(cmdline, "%s --brutus --file-path=poking-test.txt --plaintexts=and --key-len=9");
     CUTE_ASSERT(system(cmdline) == 0);
 
     remove("poking-test.txt");
