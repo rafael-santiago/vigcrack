@@ -9,6 +9,14 @@
 I have developed this tool during my first reading of ``The Code Book`` from ``Simon Singh``. Here you got a "reissue" from
 this crypto-tool.
 
+## How to clone this repo?
+
+This repo has some submodules, so after clonning it you need to initialize them. For doing it use the following way:
+
+```
+babbage@DiffEngine:~/src/vigcrack# git submodule update --init
+```
+
 ## How to build it?
 
 For building this software you need to use [Hefesto](https://github.com/rafael-santiago/hefesto). After following the
