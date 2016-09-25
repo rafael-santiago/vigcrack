@@ -2,6 +2,8 @@
 
 *An old trinket from 2005/2003.*
 
+**WARNING**: It is just a "cryptotoy" (just for fun) do not use it to protect your sensible data.
+
 ``Vigcrack`` is a cryptanalysis tool which can help on crack ``Vigenère`` ciphertexts. This tool is not strictly based on
 ``Babbage's``/``Kasiski's`` approach. In fact, here is not performed frequency analysis. Here what we get is a more brainy
 ``Hangman`` which does not hang any innocent stick figure...
