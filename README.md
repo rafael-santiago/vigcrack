@@ -2,7 +2,7 @@
 
 *An old trinket from 2005/2003.*
 
-``Vigcrack`` is a cryptoanalysis tool which can help on crack ``Vigenère`` ciphertexts. This tool is not strictly based on
+``Vigcrack`` is a cryptanalysis tool which can help on crack ``Vigenère`` ciphertexts. This tool is not strictly based on
 ``Babbage's``/``Kasiski's`` approach. In fact, here is not performed frequency analysis. Here what we get is a more brainy
 ``Hangman`` which does not hang any innocent stick figure...
 
@@ -46,7 +46,7 @@ babbage@DiffEngine:~/src/vigcrack# hefesto --uninstall
 ## How to use it?
 
 The ``Vigcrack`` is a software which introduces several operation modes. All of them related with the
-cryptoanalysis of the ``Vigenère`` cipher.
+cryptanalysis of the ``Vigenère`` cipher.
 
 In order to introduce you these operation modes I will use the basic workflow which is based on the necessity of
 cracking some encrypted data. So, let's use our good and old "crypto-actors": Alice, Bob and Eve.
