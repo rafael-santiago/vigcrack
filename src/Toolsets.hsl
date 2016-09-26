@@ -9,7 +9,12 @@ include ~/toolsets/gcc/gcc-app.hsl
 include ~/toolsets/clang/clang-app.hsl
 
 local function cmdrunbk(cmdline type string) : result type int {
-    result hefesto.sys.run($cmdline + ">/dev/null 2>&1");
+    if (hefesto.sys.os_name() != "windows") {
+        $cmdline = $cmdline + ">/dev/null 2>&1";
+    } else {
+        $cmdline = $cmdline + "> nul 2>&1";
+    }
+    result hefesto.sys.run($cmdline);
 }
 
 local function has_gcc() : result type int {
