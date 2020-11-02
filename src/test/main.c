@@ -237,16 +237,16 @@ CUTE_TEST_CASE(binpoking_tests)
                      "--plaintext=WELLIVEGO --max-attempts=17 --key-len=9", bin_path);
     CUTE_ASSERT(system(cmdline) == 0);
 
-    sprintf(cmdline, "%s --riddler --plaintexts-home=. --show-keyword");
+    sprintf(cmdline, "%s --riddler --plaintexts-home=. --show-keyword", bin_path);
     CUTE_ASSERT(system(cmdline) == 0);
 
-    sprintf(cmdline, "%s --encrypt --file-path=poking-test.txt --key=chewbacca");
+    sprintf(cmdline, "%s --encrypt --file-path=poking-test.txt --key=chewbacca", bin_path);
     CUTE_ASSERT(system(cmdline) == 0);
 
-    sprintf(cmdline, "%s --decrypt --file-path=poking-test.txt --key=chewbacca");
+    sprintf(cmdline, "%s --decrypt --file-path=poking-test.txt --key=chewbacca", bin_path);
     CUTE_ASSERT(system(cmdline) == 0);
 
-    sprintf(cmdline, "%s --brutus --file-path=poking-test.txt --plaintexts=and --key-len=9");
+    sprintf(cmdline, "%s --brutus --file-path=poking-test.txt --plaintexts=and --key-len=9", bin_path);
     CUTE_ASSERT(system(cmdline) == 0);
 
     remove("poking-test.txt");
